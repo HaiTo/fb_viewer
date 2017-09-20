@@ -1,5 +1,4 @@
 use std::io;
-use std::io::Read;
 use std::iter::Iterator;
 use std::process;
 
@@ -81,7 +80,7 @@ fn main() {
     }
 
     // read_to_string はなぜか mutably でなければならない
-    let mut stdin = io::stdin();
+    let stdin = io::stdin();
     // 読み込んだものを詰め込むbuffer
     let mut buffer: String = String::new();
 
