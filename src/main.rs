@@ -99,6 +99,7 @@ fn main() {
             format::LinePosition::Top,
             format::LineSeparator::new('-', '+', '+', '+')
         )
+        .padding(1, 1)
         .build();
     
     let mut header_record_table: Table = Table::new();
