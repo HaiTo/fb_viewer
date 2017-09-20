@@ -75,8 +75,6 @@ fn main() {
         .and_then(|d| d.deserialize())
         .unwrap_or_else(|e| e.exit());
 
-    println!("{:?}", args);
-
     if args.flag_help {
         print_usage(USAGE.to_string());
         process::exit(0);
@@ -92,9 +90,20 @@ fn main() {
         .expect("ERROR can't reading!");
 
     let mut chars = buffer.chars();
+
+    let build_format = format::FormatBuilder::new()
+        .separator(
+            format::LinePosition::Title,
+            format::LineSeparator::new('=', '+', '+', '+')
+        )
+        .separator(
+            format::LinePosition::Top,
+            format::LineSeparator::new('-', '+', '+', '+')
+        )
+        .build();
     
     let mut header_record_table: Table = Table::new();
-    header_record_table.set_format(*format::consts::FORMAT_NO_LINESEP_WITH_TITLE);
+    header_record_table.set_format(build_format);
     header_record_table.set_titles(row!["ヘッダーレコード"]);
     header_record_table.add_row(row!["区分", take_str(&mut chars, 1)]);
     header_record_table.add_row(row!["種別", take_str(&mut chars, 2)]);
@@ -124,7 +133,7 @@ fn main() {
         if identifier == '2' {
             // data record の生成と挿入
             let mut table: Table = Table::new();
-            table.set_format(*format::consts::FORMAT_NO_LINESEP_WITH_TITLE);
+            table.set_format(build_format);
             table.set_titles(row!["データレコード"]);
             // すでに nth でiterを進めてしまっているので、
             // take_str を使わないで一つ目のレコードを挿入しなければならない
@@ -151,7 +160,7 @@ fn main() {
             // trailer record の作成
             // trailer record は一つしか無いので else で入って break する
             let mut table: Table = Table::new();
-            table.set_format(*format::consts::FORMAT_NO_LINESEP_WITH_TITLE);
+            table.set_format(build_format);
             table.set_titles(row!["トレーラレコード"]);
             table.add_row(row!["区分", identifier]);
             table.add_row(row!["合計件数", take_str(&mut chars, 6)]);
@@ -165,7 +174,7 @@ fn main() {
         };
     }
     let mut table: Table = Table::new();
-    table.set_format(*format::consts::FORMAT_NO_LINESEP_WITH_TITLE);
+    table.set_format(build_format);
     table.set_titles(row!["エンドレコード"]);
     table.add_row(row!["区分", take_str(&mut chars, 1)]);
     table.add_row(row!["ダミー", take_str(&mut chars, 119)]);
