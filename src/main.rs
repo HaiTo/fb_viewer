@@ -86,7 +86,7 @@ fn main() {
     let mut buffer: String = String::new();
 
     stdin
-        .read_to_string(&mut buffer)
+        .read_line(&mut buffer)
         .expect("ERROR can't reading!");
 
     let mut chars = buffer.chars();
